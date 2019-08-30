@@ -1,0 +1,1 @@
+class Canvas{constructor(s){this.app=s,this.c=document.getElementById("canvas"),this.ctx=this.c.getContext("2d"),this.setDimensions()}setDimensions(){this.c.height=this.c.clientHeight,this.c.width=this.c.clientWidth}}class App{constructor(){this.canvas=new Canvas(this)}}var app=new App;window.onresize=function(s){app.canvas.setDimensions()};

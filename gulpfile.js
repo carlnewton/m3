@@ -5,9 +5,15 @@ const terser = require('gulp-terser');
 gulp.task('build', function() {
     return gulp.src(
         [
+            './src/Functions.js',
+            './src/Controls.js',
+            './src/Settings.js',
+            './src/TileTypes.js',
+            './src/Tile.js',
+            './src/Grid.js',
             './src/Canvas.js',
             './src/App.js',
-            './src/index.js' 
+            './src/index.js'
         ]
     )
         .pipe(concat('script.js'))

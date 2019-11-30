@@ -1,6 +1,6 @@
-# Canvas Project Template
+# m3
 
-A simple template for fullscreen canvas projects.
+A Match 3 style game made on HTML Canvas.
 
 ## Development
 

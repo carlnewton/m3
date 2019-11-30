@@ -62,7 +62,7 @@ class Grid
     switchTile(position, direction)
     {
         var tile = this.getTileFromCoords(position.x, position.y);
-
+        
         if (tile === undefined) {
             return;
         }

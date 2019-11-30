@@ -11,39 +11,73 @@ class Controls
     listen()
     {
         var _this = this;
-        window.addEventListener('mousedown', function(event) {
+
+        var down = function (event)
+        {
             _this.dragging = true;
-            _this.downPos.x = event.clientX;
-            _this.downPos.y = event.clientY;
-        });
+            switch (event.type)
+            {
+                case 'mousedown':
+                    _this.downPos.x = event.clientX;
+                    _this.downPos.y = event.clientY;
+                    break;
+                case 'touchstart':
+                    _this.downPos.x = event.touches[0].clientX;
+                    _this.downPos.y = event.touches[0].clientY;
+                    break;
+            }
+        }
 
-        window.addEventListener('mouseup', function() {
+        var up = function ()
+        {
             _this.dragging = false;
-        });
+        }
 
-        window.addEventListener('mousemove', function(event) {
+        var move = function (event)
+        {
+            switch (event.type)
+            {
+                case 'mousemove':
+                    var clientX = event.clientX;
+                    var clientY = event.clientY;
+                    break;
+                case 'touchmove':
+                    var clientX = event.touches[0].clientX;
+                    var clientY = event.touches[0].clientY;
+                    break;
+            }
+
             if (_this.dragging) {
-                if (Math.abs(_this.downPos.x - event.clientX) > this.app.settings.tileSize / 2) {
+                if (Math.abs(_this.downPos.x - clientX) > this.app.settings.tileSize / 2) {
                     _this.dragging = false;
 
                     var direction = 'left';
-                    if (_this.downPos.x < event.clientX) {
+                    if (_this.downPos.x < clientX) {
                         direction = 'right';
                     }
 
                     _this.app.grid.switchTile(_this.downPos, direction);
 
-                } else if (Math.abs(_this.downPos.y - event.clientY) > this.app.settings.tileSize / 2) {
+                } else if (Math.abs(_this.downPos.y - clientY) > this.app.settings.tileSize / 2) {
                     _this.dragging = false;
 
                     var direction = 'up';
-                    if (_this.downPos.y < event.clientY) {
+                    if (_this.downPos.y < clientY) {
                         direction = 'down';
                     }
 
                     _this.app.grid.switchTile(_this.downPos, direction);
                 }
             }
-        });
+        }
+        
+        window.addEventListener('mousedown', down, false);
+        window.addEventListener('touchstart', down, false);
+
+        window.addEventListener('mouseup', up, false);
+        window.addEventListener('touchend', up, false);
+
+        window.addEventListener('mousemove', move, false);
+        window.addEventListener('touchmove', move, false);
     }
 }

@@ -4,24 +4,19 @@ class TileTypes
     {
         this.list = [
             {
-                'name': 'red',
-                'colour': 'rgb(217,39,39)',
+                'image': 'parrot',
             },
             {
-                'name': 'orange',
-                'colour': 'rgb(252,143,18)',
+                'image': 'gorilla',
             },
             {
-                'name': 'yellow',
-                'colour': 'rgb(255,228,51)',
+                'image': 'chick',
             },
             {
-                'name': 'green',
-                'colour': 'rgb(111,204,67)',
+                'image': 'crocodile',
             },
             {
-                'name': 'blue',
-                'colour': 'rgb(13,184,181)',
+                'image': 'narwhal',
             },
         ];
     }

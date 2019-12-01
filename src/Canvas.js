@@ -46,11 +46,11 @@ class Canvas
             for (var cell = 0; cell < this.app.grid.grid[0].length; cell++)
             {
                 if (this.app.grid.grid[row][cell] !== -1) {
-                    var colour = this.app.tileTypes.list[
+                    var image = this.app.tileTypes.list[
                         this.app.grid.grid[row][cell]
-                    ].colour;
+                    ].image;
 
-                this.drawSquare(colour, cell, row);
+                this.drawSquare(image, cell, row);
 
                 if (this.app.grid.matchExists(row, cell))
                 {
@@ -67,44 +67,28 @@ class Canvas
         this.ctx.fillRect(0, 0, this.c.width, this.c.height);
     }
 
-    drawSquare(colour, x, y)
+    drawSquare(image, x, y)
     {
-        this.ctx.fillStyle = colour;
-        this.ctx.fillRect(
-            Math.floor(
-                this.leftMargin + x * this.app.settings.tileSize
-            ), 
-            Math.floor(
-                this.topMargin + y * this.app.settings.tileSize
-            ), 
-            Math.ceil(
-                this.app.settings.tileSize
-            ), 
-            Math.ceil(
-                this.app.settings.tileSize
-            )
-        );
+        var img = new Image(),
+            _this = this;
+        img.onload = function()
+        {
 
-        this.ctx.fillStyle = 'rgba(0,0,0, 0.05)';
-        this.ctx.fillRect(
-            Math.floor(
-                this.leftMargin + x * this.app.settings.tileSize + (this.app.settings.tileSize / 4)
-            ), 
-            Math.floor(
-                this.topMargin + y * this.app.settings.tileSize + (this.app.settings.tileSize / 4)
-            ), 
-            Math.ceil(
-                this.app.settings.tileSize / 2
-            ), 
-            Math.ceil(
-                this.app.settings.tileSize / 2
-            )
-        );
+            _this.ctx.drawImage(
+                img, 
+                _this.leftMargin + x * _this.app.settings.tileSize, 
+                _this.topMargin + y * _this.app.settings.tileSize,
+                _this.app.settings.tileSize,
+                _this.app.settings.tileSize
+            );
+
+        }
+        img.src = 'dist/img/' + image + '.png';
     }
 
     drawMatch(x, y)
     {
-        this.ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
         this.ctx.fillRect(
             Math.floor(
                 this.leftMargin + x * this.app.settings.tileSize

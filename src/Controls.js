@@ -47,7 +47,7 @@ class Controls
                     break;
             }
 
-            if (_this.dragging && !this.app.grid.changes.length) {
+            if (_this.dragging && !this.app.grid.matches.length) {
                 if (Math.abs(_this.downPos.x - clientX) > this.app.settings.tileSize / 2) {
                     _this.dragging = false;
 

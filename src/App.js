@@ -25,6 +25,8 @@ class App
         this.delta = now - this.lastTickUpdate;
         this.lastTickUpdate = now;
         this.grid.tick();
-        this.canvas.draw();
+        if (this.grid.changes.length) {
+            this.canvas.draw();
+        }
     }
 }

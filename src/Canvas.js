@@ -40,22 +40,23 @@ class Canvas
 
     draw()
     {
-
         for (var row = 0; row < this.app.grid.grid.length; row++)
         {
             for (var cell = 0; cell < this.app.grid.grid[0].length; cell++)
             {
-                if (this.app.grid.grid[row][cell] !== -1) {
+                if (this.app.grid.grid[row][cell] !== -1
+                    && this.app.grid.tileChanged(row, cell)
+                ) {
                     var image = this.app.tileTypes.list[
                         this.app.grid.grid[row][cell]
                     ].image;
 
-                this.drawSquare(image, cell, row);
+                    this.drawSquare(image, cell, row);
 
-                if (this.app.grid.matchExists(row, cell))
-                {
-                    this.drawMatch(cell, row);
-                }
+                    if (this.app.grid.matchExists(row, cell))
+                    {
+                        this.drawMatch(cell, row);
+                    }
                 }
             }
         }

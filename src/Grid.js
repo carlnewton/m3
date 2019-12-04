@@ -3,8 +3,10 @@ class Grid
     constructor(app)
     {
         this.app = app;
-        this.new();
         this.matches = [];
+        this.changes = [];
+
+        this.new();
         this.mode = 'wait';
         this.remainingRestTime = this.app.settings.restTime;
     }
@@ -18,6 +20,7 @@ class Grid
             for (var cell = 0; cell < this.app.settings.columns; cell++)
             {
                 this.grid[row][cell] = Math.floor(Math.random() * Math.floor(this.app.tileTypes.list.length));
+                this.changes.push([row, cell]);
             }
         }
     }
@@ -37,6 +40,7 @@ class Grid
                 break;
 
             case 'check':
+                this.changes = [];
                 this.findMatches();
                 this.mode = 'pop';
                 this.remainingRestTime = this.app.settings.restTime;
@@ -67,73 +71,67 @@ class Grid
             return;
         }
 
-        var row = tile[0] - 1;
-        var cell = tile[1] - 1;
+        var row = tile[0] - 1,
+            cell = tile[1] - 1,
+            newRow = row,
+            newCell = cell;
 
         switch(direction)
         {
             case 'up':
                 if (row > 0) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row - 1][cell]);
-                    this.grid[row - 1][cell] = cellValue;
-                }
-
-                this.findMatches();
-
-                if (this.matches.length === 0) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row - 1][cell]);
-                    this.grid[row - 1][cell] = cellValue;
+                    newRow = row - 1;
                 }
                 break;
+
             case 'down':
                 if (row < this.app.settings.rows - 1) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row + 1][cell]);
-                    this.grid[row + 1][cell] = cellValue;
-                }
-
-                this.findMatches();
-
-                if (this.matches.length === 0) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row + 1][cell]);
-                    this.grid[row + 1][cell] = cellValue;
+                    newRow = row + 1;
                 }
                 break;
+
             case 'left':
                 if (cell > 0) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row][cell - 1]);
-                    this.grid[row][cell - 1] = cellValue;
-                }
-
-                this.findMatches();
-
-                if (this.matches.length === 0) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row][cell - 1]);
-                    this.grid[row][cell - 1] = cellValue;
+                    newCell = cell - 1;
                 }
                 break;
+
             case 'right':
                 if (cell < this.app.settings.columns - 1) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row][cell + 1]);
-                    this.grid[row][cell + 1] = cellValue;
-                }
-
-                this.findMatches();
-
-                if (this.matches.length === 0) {
-                    var cellValue = getValue(this.grid[row][cell]);
-                    this.grid[row][cell] = getValue(this.grid[row][cell + 1]);
-                    this.grid[row][cell + 1] = cellValue;
+                    newCell = cell + 1;
                 }
                 break;
         }
 
+        if (newRow !== row || newCell !== cell) {
+            var cellValue = getValue(this.grid[row][cell]);
+            this.grid[row][cell] = getValue(this.grid[newRow][newCell]);
+            this.grid[newRow][newCell] = cellValue;
+
+            this.findMatches();
+
+            if (this.matches.length === 0) {
+                var cellValue = getValue(this.grid[row][cell]);
+                this.grid[row][cell] = getValue(this.grid[newRow][newCell]);
+                this.grid[newRow][newCell] = cellValue;
+            } else {
+                this.changes.push([row, cell], [newRow, newCell]);
+
+            }
+        }
+    }
+
+    tileChanged(row, cell)
+    {
+        for (let change of this.changes)
+        {
+            if (change[0] === row && change[1] === cell)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     getTileFromCoords(x, y)
@@ -174,6 +172,7 @@ class Grid
                 {
                     this.grid[rowCount][cellCount] = getValue(this.grid[rowCount - 1][cellCount]);
                     this.grid[rowCount - 1][cellCount] = -1;
+                    this.changes.push([rowCount, cellCount], [rowCount - 1, cellCount]);
                 }
                 cellCount++;
             }
@@ -190,6 +189,7 @@ class Grid
         {
             if (cell === -1) {
                 this.grid[0][cellCount] = Math.floor(Math.random() * Math.floor(this.app.tileTypes.list.length));
+                this.changes.push([0, cellCount])
             }
 
             cellCount++;
